@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login_has_failed</title>
+</head>
+<body>
+    <div style="font-size: 50px;margin: 54px 0 0 330px;">
+        <b>注册失败，手机号码重复或密码不一致</b>
+    </div>
+    <div style="margin: 0 0 0 706px;">
+        <button onclick="login_button()"
+        style="    
+        box-shadow: none;
+        border: 0;
+        line-height: 45px;
+        font-size: 15px;
+        display: block;
+        margin: 20px 0;
+        color: #fff;
+        background-color: #fa9a9a;
+        border-radius: 3px;">
+            返回注册
+        </button>
+    </div>
+</body>
+<script>
+    function login_button(){
+        window.location.href='/register'
+    }
+</script>
+</html>
