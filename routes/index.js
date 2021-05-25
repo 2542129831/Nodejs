@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
-var path = require('path')
 
 let connection = mysql.createConnection({
   host:'localhost',
@@ -20,13 +19,13 @@ connection.query("select * from member",function(err,results,fields){
 router.get('/',function(req,res,next){
   res.render('login')
 })
-//注册页面
-router.get('/register',function(req,res,next){
-  res.render('register')
-})
 //登录失败页面
 router.get('/login_has_failed',function(req,res,next){
   res.render('login_has_failed')
+})
+//注册页面
+router.get('/register',function(req,res,next){
+  res.render('register')
 })
 //注册失败页面
 router.get('/register_has_failed',function(req,res,next){
@@ -36,10 +35,62 @@ router.get('/register_has_failed',function(req,res,next){
 router.get('/register_has_true',function(req,res,next){
   res.render('register_has_true')
 })
-//后台管理
+//后台博客管理
 router.get('/blogs',function(req,res,next){
   res.render('blogs')
 })
+//后台用户管理
+router.get('/user',function(req,res,next){
+  connection.query("select * from member",function(err,results,fields){
+    var datastring = JSON.stringify(results);
+    var data = JSON.parse(datastring);
+    console.log('result:',data);
+    res.render('user',{"sqldata":data})
+  })
+})
+//后台用户信息删除
+router.get('/delete:id',(req,res) => {
+  connection.query("delete from member where id ='"+req.params.id+"'",function(err,results,fields){
+    connection.query("select * from member",function(err,results,fields){
+      var datastring = JSON.stringify(results);
+      var data = JSON.parse(datastring);
+      console.log('result:',data);
+      res.render('user',{"sqldata":data})
+    })
+  })
+});
+//后台用户信息更改
+router.get('/update:id',(req,res) => {
+  connection.query("select * from member where id ='"+req.params.id+"'",function(err,results){
+    if(err){
+      console.log("err",err)
+    }
+    var data = {
+      "id":results[0].id,
+      "name":results[0].name,
+      "phone_number":results[0].phone_number,
+      "password":results[0].password,
+      "type":results[0].type
+    }
+    console.log('result:',data);
+    res.render('user_update',{"data":data});
+  });
+});
+//后台用户信息编辑表单
+router.post("/update",(req,res) => {
+  connection.query("update member set name = '"+req.body.name+"',phone_number = '"+req.body.phone_number+"',password = '"+req.body.password+"',type = '"+req.body.type+"' where phone_number='"+req.body.phone_number+"'",function(err,results){
+    if(err){
+      console.log("err",err)
+    }
+    console.log(results);
+    connection.query("select * from member",function(err,results,fields){
+      var datastring = JSON.stringify(results);
+      var data = JSON.parse(datastring);
+      console.log('result:',data);
+      res.render('user',{"sqldata":data})
+    });
+  });
+});
 //新增博文
 router.get('/blogs-input',function(req,res,next){
   res.render('blogs-input')
@@ -127,7 +178,6 @@ router.get('/process_get',function(req,res,next){
             return;//如果失败了就直接return不会继续下面的代码
           }
           res.render("register_has_true");//如果注册成功就给客户端返回注册成功页面
-          return res.redirect()
       });
     }
     else{

@@ -15,8 +15,7 @@
     <div class="ui container">
       <div class="ui inverted secondary stackable menu">
         <h2 class="ui olive header item" style="font-family: STSong">管理后台</h2>
-        <a href="#" class="m-item item m-mobile-hide"><i class="home icon"></i>文章管理</a>
-        <a href="#" class=" m-item item m-mobile-hide"><i class="clone outline icon"></i>分类管理</a>
+        <a href="/blogs" class=" m-item item m-mobile-hide"><i class="home icon"></i>文章管理</a>
         <a href="#" class="active m-item item m-mobile-hide"><i class="pencil alternate icon"></i>用户管理</a>
         <a href="#" class=" m-item item m-mobile-hide"><i class="image icon"></i>评论管理</a>
         <div class="right m-item m-mobile-hide menu">
@@ -59,21 +58,10 @@
         <input type="hidden" name="page" >
         <div class="inline fields">
           <div class="field">
-            <input type="text" name="title" placeholder="标题">
+            <input type="text" name="name" placeholder="用户名" id="name">
           </div>
           <div class="field">
-            <div class="ui labeled action input">
-              <div class="ui type selection dropdown">
-                <input type="hidden" name="typeId">
-                <i class="dropdown icon"></i>
-                <div class="default text">分类</div>
-                <div class="menu">
-                  <div class="item" data-value="1">我的故事</div>
-                </div>
-              </div>
-              <button id="clear-btn" class="ui compact button">clear</button>
-            </div>
-
+            <input type="text" name="phone_number" placeholder="手机号" id="phone_number">
           </div>
           <!--<div class="field">-->
             <!--<div class="ui checkbox">-->
@@ -81,6 +69,7 @@
               <!--<label for="recommend">推荐</label>-->
             <!--</div>-->
           <!--</div>-->
+          <button id="empty-btn" class="ui compact button">清空</button>
           <div class="field">
             <button  type="button" id="search-btn" class="ui mini teal basic button"><i class="search icon"></i>搜索</button>
           </div>
@@ -91,28 +80,30 @@
           <thead>
           <tr align="center">
             <th>ID</th>
-            <th>标题</th>
+            <th>用户名</th>
+            <th>手机号</th>
+            <th>密码</th>
             <th>类型</th>
-            <th>推荐</th>
-            <th>状态</th>
-            <th>更新时间</th>
+            <th>注册时间</th>
             <th>操作</th>
           </tr>
           </thead>
           <tbody>
-          <tr align="center">
-            <td>1</td>
-            <td>大圣，此去欲何?</td>
-            <td>我的故事</td>
-            <td>是</td>
-            <td>草稿</td>
-            <td>2020-01-02 05:20</td>
+          <% sqldata.forEach( i => { %>
+          <tr align="center" class="tr">
+            <td><%= i.id%></td>
+            <td class="name"><%= i.name%></td>
+            <td class="phone_number"><%= i.phone_number%></td>
+            <td><%= i.password%></td>
+            <td><%= i.type%></td>
+            <td><%= i.time_stamp%></td>
             <td>
               <!--th:href="@{/admin/types/{id}/input(id=${type.id})}"-->
-              <a href="#" class="ui mini teal basic button">编辑</a>
-              <a href="#" onclick="return confirm('确定要删除该文章吗？三思啊! 删了可就没了！')" class="ui mini red basic button">删除</a>
+              <a data-id="<%=i.id %>" class="ui mini teal basic button">编辑</a>
+              <a data-id="<%=i.id %>" class="ui mini red basic button">删除</a>
             </td>
           </tr>
+          <% }) %>
           </tbody>
           <tfoot>
           <tr>
@@ -122,7 +113,7 @@
                   <a class="item">上一页</a>
                 </div>
                 <div class="ten wide column" align="center">
-                  <p>第 <span ></span> 页，共 <span></span> 页，有 <span></span> 篇文章</p>
+                  <p>第 <span ></span> 页，共 <span></span> 页，有 <span></span> 位用户</p>
                 </div>
 
                 <div class="three wide column" align="center">
@@ -130,9 +121,6 @@
                 </div>
               </div>
               <div align="center">
-                <a href="#">
-                  <button type="button" class="ui teal button m-mobile-wide m-margin-top"><i class="pencil icon"></i>新增</button>
-                </a>
               </div>
             </th>
           </tr>
@@ -227,7 +215,6 @@
 
   <script>
       // $('#newblog-container').load(/*[[@{/footer/newblog}]]*/"/footer/newblog");
-
       // 运行时间统计
       function secondToDate(second) {
           if (!second) {
@@ -296,10 +283,55 @@
       $("[name='page']").val($(obj).data("page"));
       loaddata();
     }
-
+    //搜索逻辑
     $("#search-btn").click(function () {
-      $("[name='page']").val(0);
-      loaddata();
+      Array.from(document.getElementsByClassName("phone_number")) 
+        .filter(i => 
+            (i.innerText.search(document.getElementById("phone_number").value)!=(-1)) && !(document.getElementById("phone_number").value==""))
+        .forEach(i => 
+            i.parentNode.style = "display:table-row;");
+
+      Array.from(document.getElementsByClassName("name")) 
+        .filter(i => 
+            (i.innerText.search(document.getElementById("name").value)!=(-1)) && !(document.getElementById("name").value==""))
+        .forEach(i => 
+            i.parentNode.style = "display:table-row;");
+
+      Array.from(document.getElementsByClassName("phone_number")) 
+        .filter(i => 
+            (i.innerText.search(document.getElementById("phone_number").value)==(-1)) && !(document.getElementById("phone_number").value==""))
+        .forEach(i => 
+            i.parentNode.style = "display:none;");
+
+      Array.from(document.getElementsByClassName("name")) 
+        .filter(i => 
+            (i.innerText.search(document.getElementById("name").value)==(-1)) && !(document.getElementById("name").value==""))
+        .forEach(i => 
+            i.parentNode.style = "display:none;");
+    });
+    //搜索框清空逻辑
+    $("#empty-btn").click(function () {
+      document.getElementById("name").value='';
+      document.getElementById("phone_number").value='';
+    Array.from(document.getElementsByClassName("tr")).forEach(i => i.style = "display: table-row;");
+    });
+    //删除逻辑
+    Array.from(document.getElementsByClassName("ui mini red basic button")).forEach(i=> {
+      i.onclick = function(){
+        if(confirm("是否删除该用户？")){
+          let index = this.getAttribute("data-id");
+          window.location.href = '/delete' + index;
+        }
+      }
+    });
+    //编辑逻辑
+    Array.from(document.getElementsByClassName("ui mini teal basic button")).forEach(i=> {
+      i.onclick = function(){
+        if(confirm("是否更改该数据？")){
+          let index = this.getAttribute("data-id");
+          window.location.href = '/update' + index;
+        }
+      }
     });
     function loaddata() {
       $("#table-container").load(/*[[@{/admin/blogs/search}]]*/"/admin/blogs/search",{
