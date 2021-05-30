@@ -99,8 +99,8 @@
             <td><%= i.time_stamp%></td>
             <td>
               <!--th:href="@{/admin/types/{id}/input(id=${type.id})}"-->
-              <a data-id="<%=i.id %>" class="ui mini teal basic button">编辑</a>
-              <a data-id="<%=i.id %>" class="ui mini red basic button">删除</a>
+              <a data-id="<%=i.id %>" class="ui mini teal basic button" name="update">编辑</a>
+              <a data-id="<%=i.id %>" class="ui mini red basic button" name="delete">删除</a>
             </td>
           </tr>
           <% }) %>
@@ -316,7 +316,7 @@
     Array.from(document.getElementsByClassName("tr")).forEach(i => i.style = "display: table-row;");
     });
     //删除逻辑
-    Array.from(document.getElementsByClassName("ui mini red basic button")).forEach(i=> {
+    Array.from(document.getElementsByName("delete")).forEach(i=> {
       i.onclick = function(){
         if(confirm("是否删除该用户？")){
           let index = this.getAttribute("data-id");
@@ -325,7 +325,7 @@
       }
     });
     //编辑逻辑
-    Array.from(document.getElementsByClassName("ui mini teal basic button")).forEach(i=> {
+    Array.from(document.getElementsByName("update")).forEach(i=> {
       i.onclick = function(){
         if(confirm("是否更改该数据？")){
           let index = this.getAttribute("data-id");
@@ -340,7 +340,6 @@
         page : $("[name='page']").val()
       });
     }
-
   </script>
 </body>
 </html>

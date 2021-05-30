@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 
+
 let connection = mysql.createConnection({
   host:'localhost',
   user:'root',
@@ -37,17 +38,48 @@ router.get('/register_has_true',function(req,res,next){
 })
 //后台博客管理
 router.get('/blogs',function(req,res,next){
-  res.render('blogs')
-})
+  connection.query("select * from blog",function(err,results,fields){
+    var datastring = JSON.stringify(results);
+    var data = JSON.parse(datastring);
+    console.log('result:',data);
+    res.render('blogs',{"sqldata":data});
+  });
+});
+//后台新增博文
+router.get('/blogs-input',function(req,res,next){
+  res.render('blogs-input');
+});
+//博文新增失败
+router.get('/blog_input_failed.html',function(req,res,next){
+  res.render('blog_input_failed.html');
+});
+//后台博文新增表单
+router.post('/blogs-input',function(req,res,next){
+  connection.query("insert into blog(type,title,description,content,time_stamp) value(?,?,?,?,?)",[req.body.type,req.body.title,req.body.description,req.body.content,(new Date()).Format("yyyy-MM-dd hh:mm:ss")],function (err, results) {
+    console.log(err)
+    console.log(results)
+    if(err){
+      console.log('[INSERT ERROR] - ',err.message);
+      res.render("0");//如果发布失败就给客户端返回0
+      return;//如果失败了就直接return不会继续下面的代码
+    }
+    connection.query("select * from blog",function(err,results){
+      var datastring = JSON.stringify(results);
+      var data = JSON.parse(datastring);
+      console.log('result:',data);
+      res.render('blogs',{"sqldata":data});
+    });//如果发布成功就给客户端返回后台博文管理页面
+});
+});
 //后台用户管理
 router.get('/user',function(req,res,next){
-  connection.query("select * from member",function(err,results,fields){
+  connection.query("select * from member",function(err,results){
     var datastring = JSON.stringify(results);
     var data = JSON.parse(datastring);
     console.log('result:',data);
     res.render('user',{"sqldata":data})
-  })
-})
+  });
+});
 //后台用户信息删除
 router.get('/delete:id',(req,res) => {
   connection.query("delete from member where id ='"+req.params.id+"'",function(err,results,fields){
@@ -55,9 +87,9 @@ router.get('/delete:id',(req,res) => {
       var datastring = JSON.stringify(results);
       var data = JSON.parse(datastring);
       console.log('result:',data);
-      res.render('user',{"sqldata":data})
-    })
-  })
+      res.render('user',{"sqldata":data});
+    });
+  });
 });
 //后台用户信息更改
 router.get('/update:id',(req,res) => {
@@ -81,9 +113,9 @@ router.post("/update",(req,res) => {
   connection.query("update member set name = '"+req.body.name+"',phone_number = '"+req.body.phone_number+"',password = '"+req.body.password+"',type = '"+req.body.type+"' where phone_number='"+req.body.phone_number+"'",function(err,results){
     if(err){
       console.log("err",err)
-    }
+    } 
     console.log(results);
-    connection.query("select * from member",function(err,results,fields){
+    connection.query("select * from member",function(err,results){
       var datastring = JSON.stringify(results);
       var data = JSON.parse(datastring);
       console.log('result:',data);
@@ -91,23 +123,82 @@ router.post("/update",(req,res) => {
     });
   });
 });
-//新增博文
-router.get('/blogs-input',function(req,res,next){
-  res.render('blogs-input')
-})
-//跳转到个人页面
+
+//前台首页
+router.get('/index:id',function(req,res,next){
+      let id = req.params.id;
+      connection.query("select * from blog ",function(err,result){
+        console.log(result);
+        let datastring = JSON.stringify(result);
+          var data = JSON.parse(datastring);
+        res.render('index',{
+          "data":data,
+          "id":id
+        });
+      });
+});
+
+//美食博文页面
+router.get('/food:id',function(req,res,next){
+  let id = req.params.id;
+  connection.query("select * from blog where type = '美食'",function(err,result){
+    console.log(result);
+    let datastring = JSON.stringify(result);
+      var data = JSON.parse(datastring);
+    res.render('food',{
+      "data":data,
+      "id":id
+    });
+  });
+});
+
+//动漫博文页面
+router.get('/animation:id',function(req,res,next){
+  let id = req.params.id;
+  connection.query("select * from blog where type = '动漫'",function(err,result){
+    console.log(result);
+    let datastring = JSON.stringify(result);
+      var data = JSON.parse(datastring);
+    res.render('animation',{
+      "data":data,
+      "id":id
+    });
+  });
+});
+
+//编程博文页面
+router.get('/program:id',function(req,res,next){
+  let id = req.params.id;
+  connection.query("select * from blog where type = '技术'",function(err,result){
+    console.log(result);
+    let datastring = JSON.stringify(result);
+      var data = JSON.parse(datastring);
+    res.render('program',{
+      "data":data,
+      "id":id
+    });
+  });
+});
+
+//前台个人信息
 router.get('/about:id',function(req,res,next){
-  let selectSQL = "select * from member where id = '"+id+"'";
-  connection.query(selectSQL,function (err, result) {
-    let personal = {
+  let id = req.params.id;
+  connection.query("select * from member where id ='"+req.params.id+"'",function(err,result){
+    let data1 = {
+      "id":result[0].id,
       "name":result[0].name,
       "naphone_numberme":result[0].phone_number,
-      "head_portrait":result[0].head_portrait,
-      "time_stamp":result[0].time_stamp,
+      "time_stamp":result[0].time_stamp
     }
-    res.render('about',personal)
+    let datastring = JSON.stringify(data1);
+      var data = JSON.parse(datastring);
+    res.render('about',{
+      "data":data,
+      "id":id
+    });
   });
-})
+});
+
 //登录表单提交
 router.get('/login',function(req,res,next){
   let response = {
@@ -124,15 +215,27 @@ let selectSQL = "select id,phone_number,password,type from member where phone_nu
      if(result==''){
          res.render('login_has_failed')
      }
-     else if(result[0].type=="user"){
-         console.log(result[0].type)
-         console.log("OK");
-         res.render('index',{"id":result[0].id})//跳转到首页
-     }else if(result[0].type=="admin"){
+     else if(result[0].type=="user"){//用户跳转到首页
+      let id = result[0].id;
+      connection.query("select * from blog ",function(err,result){
+        console.log(result);
+        let datastring = JSON.stringify(result);
+          var data = JSON.parse(datastring);
+        res.render('index',{
+          "data":data,
+          "id":id
+        });
+      });
+     }else if(result[0].type=="admin"){//管理员跳转到后台管理
       console.log(result[0].type)
       console.log("OK");
-      res.render('blogs')//跳转到后台管理
-     }
+      connection.query("select * from blog",function(err,results){
+        var datastring = JSON.stringify(results);
+        var data = JSON.parse(datastring);
+        console.log('result:',data);
+        res.render('blogs',{"sqldata":data});
+      });
+     };
     });
 console.log(response);
 })
@@ -187,6 +290,9 @@ router.get('/process_get',function(req,res,next){
   }else{
     res.render('register_has_failed')
   }
-})
+});
+
+
+
 
 module.exports = router;

@@ -16,16 +16,16 @@
 			<form method="POST" action="update">
 				<ul class="group_input">
 					<li>
-						<input type="text" name="name" value="<%=data.name%>"/>（用户名）
+						<input type="text" name="name" value="<%=data.name%>" class="name required" id="name" required="required"/>（用户名）
 					</li>
 					<li>
-						<input type="text" name="phone_number" value="<%=data.phone_number%>"/>（手机号）
+						<input type="text" class="mobile required" id="mobile" name="phone_number" value="<%=data.phone_number%>" required="required"/>（手机号）
 					</li>
 					<li>
-						<input type="text" name="password" value="<%=data.password%>"/>（密码）
+						<input type="text" class="psd required" id="psd" name="password" value="<%=data.password%>" required="required"/>（密码）
 					</li>
 					<li>
-						<select type="text" name="type" id="group" value="<%=data.type%>" style="   
+						<select required type="text" name="type" id="group" value="<%=data.type%>" style="   
 							width: 300px;
 							padding: 16px 12px;
 							margin: -1px;
@@ -81,7 +81,7 @@
 			//验证手机号
 			if($(this).is("#mobile")){
 				var mobileVal = $.trim(this.value);
-				// var regMobile = /^1[3|4|5|7|8][0-9]{9}$/;
+				 var regMobile = /^1[3|4|5|7|8][0-9]{9}$/;
 				if(mobileVal == ""){
 					var errorMsg = " 请输入手机号或邮箱！";
 					$parent.append("<span class='msg onError'>" + errorMsg + "</span>");

@@ -16,14 +16,11 @@
         <div class="ui inverted secondary stackable menu">
             <h2 class="ui olive header item" style="font-family: STSong">ONESTAR</h2>
             <!--<div class="right m-item item m-mobile-hide">-->
-                <a href="#" class="m-item item m-mobile-hide "><i class="home icon"></i>首页</a>
-                <a href="#" class="m-item item m-mobile-hide"><i class="clone outline icon"></i>分类</a>
-                <a href="#" class="m-item item m-mobile-hide"><i class="clock icon"></i>时间轴</a>
-                <a href="#" class="m-item item m-mobile-hide"><i class="music icon"></i>音乐盒</a>
-                <a href="#" class="m-item item m-mobile-hide"><i class="book icon"></i>留言板</a>
-                <a href="#" class="m-item item m-mobile-hide"><i class="pencil alternate icon"></i>友人帐</a>
-                <a href="#" class="m-item item m-mobile-hide"><i class="image icon"></i>照片墙</a>
-                <a href="#" class="active m-item item m-mobile-hide"><i class="info icon"></i>关于我</a>
+                <a href="index<%=id%>" class="m-item item m-mobile-hide "><i class="home icon"></i>首页</a>
+                <a href="food<%=id%>"" class="m-item item m-mobile-hide">美食</a>
+                <a href="animation<%=id%>"" class="m-item item m-mobile-hide">动漫</a>
+                <a href="program<%=id%>" class="m-item item m-mobile-hide">编程</a>
+                <a href="#" class="active m-item item m-mobile-hide"><i class="info icon"></i>账号信息</a>
             <!--</div>-->
             <div class="right m-item item m-mobile-hide">
                 <form name="search" action="#" method="post" target="_blank">
@@ -46,7 +43,7 @@
     <img src="/img/aboutbg.jpg" th:src="@{/img/aboutbg.jpg}" alt="" class="ui m-bg image" style="width: 100%;height: 100%">
     <div class="m-bg-class_cover">
         <div class="ui container" style="position: relative ;bottom: -540px;">
-            <div class="m-font-size-title" align="center" style="font-family:'STXingkai'">关于我</div>
+            <div class="m-font-size-title" align="center" style="font-family:'STXingkai'">账号信息</div>
             <div class="m-font-size-text-init-title m-margin-top" align="center">头一次活这么久，记得善待自己</div>
         </div>
     </div>
@@ -83,11 +80,10 @@
     </div>
         <hr class="m-margin-top-small" style="width: 30%">
         <br>
-        <div>
-            <p><%personal.name%></p>
-            <p><%personal.naphone_numberme%></p>
-            <p><%personal.head_portrait%></p>
-            <p><%personal.time_stamp%></p>
+        <div style="margin: 0 360px;font-size: 21px;">
+            <p>用户名：<%=data.name%></p>
+            <p>手机号（账号）：<%=data.naphone_numberme%></p>
+            <p>注册时间：<%=data.time_stamp%></p>
         </div>
     
     <!--<div class="hiddenDiv"></div>-->
