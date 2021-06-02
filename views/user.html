@@ -320,7 +320,7 @@
       i.onclick = function(){
         if(confirm("是否删除该用户？")){
           let index = this.getAttribute("data-id");
-          window.location.href = '/delete' + index;
+          window.location.href = '/delete_user' + index;
         }
       }
     });
@@ -329,7 +329,7 @@
       i.onclick = function(){
         if(confirm("是否更改该数据？")){
           let index = this.getAttribute("data-id");
-          window.location.href = '/update' + index;
+          window.location.href = '/update_user' + index;
         }
       }
     });

@@ -58,20 +58,14 @@
         <input type="hidden" name="page" >
         <div class="inline fields">
           <div class="field">
-            <input type="text" name="title" placeholder="标题">
+            <input type="text" name="title" placeholder="标题" id="title">  
           </div>
           <div class="field">
-            <div class="ui labeled action input">
-              <div class="ui type selection dropdown">
-                <input type="hidden" name="typeId">
-                <i class="dropdown icon"></i>
-                <div class="default text">分类</div>
-                <div class="menu">
-                  <div class="item" data-value="1">我的故事</div>
-                </div>
-              </div>
-              <button id="clear-btn" class="ui compact button">clear</button>
-            </div>
+            <select type="text" name="type" class="ui labeled action input" required id="type">
+              <option>美食</option>
+              <option>动漫</option>
+              <option>技术</option>
+            </select>
 
           </div>
           <!--<div class="field">-->
@@ -101,8 +95,8 @@
             <% sqldata.forEach( i => { %>
             <tr align="center" class="tr">
               <td><%= i.id%></td>
-              <td class="name"><%= i.title%></td>
-              <td class="phone_number"><%= i.type%></td>
+              <td class="title"><%= i.title%></td>
+              <td class="type"><%= i.type%></td>
               <td><%= i.time_stamp%></td>
               <td>
                 <!--th:href="@{/admin/types/{id}/input(id=${type.id})}"-->
@@ -304,51 +298,51 @@
     }
     //搜索逻辑
     $("#search-btn").click(function () {
-      Array.from(document.getElementsByClassName("phone_number")) 
+      Array.from(document.getElementsByClassName("title")) 
         .filter(i => 
-            (i.innerText.search(document.getElementById("phone_number").value)!=(-1)) && !(document.getElementById("phone_number").value==""))
+            (i.innerText.search(document.getElementById("title").value)!=(-1)) && !(document.getElementById("title").value==""))
         .forEach(i => 
             i.parentNode.style = "display:table-row;");
 
-      Array.from(document.getElementsByClassName("name")) 
+      Array.from(document.getElementsByClassName("type")) 
         .filter(i => 
-            (i.innerText.search(document.getElementById("name").value)!=(-1)) && !(document.getElementById("name").value==""))
+            (i.innerText.search(document.getElementById("type").value)!=(-1)) && !(document.getElementById("type").value==""))
         .forEach(i => 
             i.parentNode.style = "display:table-row;");
 
-      Array.from(document.getElementsByClassName("phone_number")) 
+      Array.from(document.getElementsByClassName("title")) 
         .filter(i => 
-            (i.innerText.search(document.getElementById("phone_number").value)==(-1)) && !(document.getElementById("phone_number").value==""))
+            (i.innerText.search(document.getElementById("title").value)==(-1)) && !(document.getElementById("title").value==""))
         .forEach(i => 
             i.parentNode.style = "display:none;");
 
-      Array.from(document.getElementsByClassName("name")) 
+      Array.from(document.getElementsByClassName("type")) 
         .filter(i => 
-            (i.innerText.search(document.getElementById("name").value)==(-1)) && !(document.getElementById("name").value==""))
+            (i.innerText.search(document.getElementById("type").value)==(-1)) && !(document.getElementById("type").value==""))
         .forEach(i => 
             i.parentNode.style = "display:none;");
     });
     //搜索框清空逻辑
     $("#empty-btn").click(function () {
-      document.getElementById("name").value='';
-      document.getElementById("phone_number").value='';
+      document.getElementById("title").value='';
+      document.getElementById("type").value='美食';
     Array.from(document.getElementsByClassName("tr")).forEach(i => i.style = "display: table-row;");
     });
     //删除逻辑
     Array.from(document.getElementsByName("delete")).forEach(i=> {
       i.onclick = function(){
-        if(confirm("是否删除该用户？")){
+        if(confirm("是否删除该博文？")){
           let index = this.getAttribute("data-id");
-          window.location.href = '/delete' + index;
+          window.location.href = '/delete_blog' + index;
         }
       }
     });
     //编辑逻辑
     Array.from(document.getElementsByName("update")).forEach(i=> {
       i.onclick = function(){
-        if(confirm("是否更改该数据？")){
+        if(confirm("是否更改该博文数据？")){
           let index = this.getAttribute("data-id");
-          window.location.href = '/update' + index;
+          window.location.href = '/update_blog' + index;
         }
       }
     });

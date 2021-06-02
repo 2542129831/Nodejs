@@ -11,9 +11,9 @@
 	<!-- particles.js container -->
 	<div id="particles-js"></div>
 	<div id="wrapper">
-		<a style="font-size: 30px;">id:<%=data.id%></a>
+		<a style="font-size: 30px;">修改用户ID:<%=data.id%></a>
 		<div id="login">
-			<form method="POST" action="update">
+			<form method="POST" action="update_user<%=data.id%>">
 				<ul class="group_input">
 					<li>
 						<input type="text" name="name" value="<%=data.name%>" class="name required" id="name" required="required"/>（用户名）
@@ -22,7 +22,7 @@
 						<input type="text" class="mobile required" id="mobile" name="phone_number" value="<%=data.phone_number%>" required="required"/>（手机号）
 					</li>
 					<li>
-						<input type="text" class="psd required" id="psd" name="password" value="<%=data.password%>" required="required"/>（密码）
+						<input type="password" class="psd required"  name="password" value="<%=data.password%>" required="required"/>（md5加密后的密码）
 					</li>
 					<li>
 						<select required type="text" name="type" id="group" value="<%=data.type%>" style="   
@@ -38,6 +38,7 @@
 					</li>		 
 				</ul>
 				<button type="submit" class="submit_btn" id="btnSubmit">更改信息</button>
+				<a href="/user"><button class="submit_btn" id="btnSubmit"></button>返回用户列表</button></a>
 			</form>
 		</div>
 	</div>
@@ -119,7 +120,7 @@
     			return false;
     		}
     	});
-		})
+		});
 		
 	</script>
 </body>
